@@ -170,13 +170,6 @@ function setPosition(jObj, x, y) {
 }
 
 function getPosition(jObj) {
-  // must have had setPosition called
-  // var leftCSS = jObj.css("left");
-  // var topCSS = jObj.css("top");
-  //
-  // var left = parseFloat(leftCSS.substring(0, leftCSS.length - 2));
-  // var top = parseFloat(topCSS.substring(0, topCSS.length - 2));
-
   var left = jObj.position().left;
   var top = jObj.position().top;
 
