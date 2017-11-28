@@ -1,0 +1,8 @@
+#game {
+  border: 1px black solid;
+  background-image: url("assets/boyd_orr.png");
+}
+
+#peter {
+  position: relative;
+}
