@@ -29,6 +29,8 @@ function initialiseGame() {
   // initialise game screen dimensions
   gameScreen.css({ 'width': gameWidth + 'px', 'height': gameHeight + 'px' });
 
+  console.log(getPosition(gameScreen));
+
   // set initial position for peter
   setPosition(peter, 0.5*(gameWidth-peter.width()), gameHeight-peter.height());
 
@@ -64,7 +66,7 @@ function gameLoop() {
       }
 
       // check block reached end
-      if(getPosition(block).y > gameHeight) {
+      if(getPosition(block).y+0.5*block.height() > gameHeight) {
         endGame();
       }
     }
@@ -122,10 +124,16 @@ function keyReleased(event) {
 
 function moveLeft() {
   setPosition(peter, getPosition(peter).x-speed, getPosition(peter).y);
+  if(getPosition(peter).x < 0) {
+    setPosition(peter, 0, getPosition(peter).y);
+  }
 }
 
 function moveRight() {
   setPosition(peter, getPosition(peter).x+speed, getPosition(peter).y);
+  if(getPosition(peter).x > gameWidth-peter.width()) {
+    setPosition(peter, gameWidth-peter.width(), getPosition(peter).y);
+  }
 }
 
 function detectCollision(a, b) { // a is Peter, b is block
@@ -158,11 +166,14 @@ function setPosition(jObj, x, y) {
 
 function getPosition(jObj) {
   // must have had setPosition called
-  var leftCSS = jObj.css("left");
-  var topCSS = jObj.css("top");
+  // var leftCSS = jObj.css("left");
+  // var topCSS = jObj.css("top");
+  //
+  // var left = parseFloat(leftCSS.substring(0, leftCSS.length - 2));
+  // var top = parseFloat(topCSS.substring(0, topCSS.length - 2));
 
-  var left = parseFloat(leftCSS.substring(0, leftCSS.length - 2));
-  var top = parseFloat(topCSS.substring(0, topCSS.length - 2));
+  var left = jObj.position().left;
+  var top = jObj.position().top;
 
   return { x: left, y: top };
 }
