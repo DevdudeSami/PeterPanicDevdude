@@ -15,8 +15,8 @@ const blockNames = ["Algs.png", "AP.png", "DF.png", "IS.png", "PSD.png"];
 const gameWidth = 800;
 const gameHeight = 600;
 
-const speed = 5;
-const blockSpeed = 3;
+const speed = 6;
+var blockSpeed = 3;
 
 /// Set initial variables and conditions
 function initialiseGame() {
@@ -64,6 +64,10 @@ function gameLoop() {
         score += 1;
         updateScoreView();
         blockOnScreen = false;
+
+        if(score % 2 == 0) {
+          blockSpeed += 0.1;
+        }
       }
 
       // check block reached end
@@ -71,8 +75,6 @@ function gameLoop() {
         endGame();
       }
     }
-  } else {
-    // game over
   }
 }
 
@@ -86,6 +88,7 @@ function endGame() {
 function restartGame() {
   hideInfo();
   score = 0;
+  blockSpeed = 3;
   state = "playing";
 }
 
