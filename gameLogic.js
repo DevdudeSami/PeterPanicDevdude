@@ -6,12 +6,16 @@ var info;
 var blockOnScreen = false;
 var state = "playing";  // playing || gameOver
 var score = 0;
+var moving = "none"; // none || left || right
+
+var petePos = { x: 0, y: 0 };
+var blockPos = { x: 0, y: 0 };
 
 const blockNames = ["Algs.png", "AP.png", "DF.png", "IS.png", "PSD.png"];
 const gameWidth = 800;
 const gameHeight = 600;
 
-const speed = 20;
+const speed = 5;
 const blockSpeed = 3;
 
 /// Set initial variables and conditions
@@ -33,9 +37,10 @@ function initialiseGame() {
 
   // listen to keydown events
   window.addEventListener('keydown', keyPressed);
+  window.addEventListener('keyup', keyReleased);
 
   // Start game loop
-  window.setInterval(gameLoop, 20);
+  window.setInterval(gameLoop, 5);
 }
 
 function gameLoop() {
@@ -47,6 +52,10 @@ function gameLoop() {
     } else {
       // move the block
       setPosition(block, getPosition(block).x, getPosition(block).y+blockSpeed);
+
+      // move peter
+      if(moving == "left") { moveLeft(); }
+      else if(moving == "right") { moveRight(); }
 
       // check collision
       if(detectCollision(peter, block)) {
@@ -90,20 +99,25 @@ function createNewBlock() {
 
   block.prop('src', "assets/"+blockName);
   setPosition(block, getRandomInt(0,gameWidth-block.width()), -1.5*block.height());
-
-  gameScreen.append("")
 }
 
 function keyPressed(event) {
-  if(event.key === "ArrowLeft") {
-    moveLeft();
+  if(state == "playing") {
+    if(event.key === "ArrowLeft") {
+     moving = "left";
+    }
+    else if(event.key === "ArrowRight") {
+      moving = "right";
+    }
   }
-  else if(event.key === "ArrowRight") {
-    moveRight();
-  }
-  else if(event.keyCode == 13) {
+
+  if(event.keyCode == 13) {
     if(state == "gameOver") { restartGame(); }
   }
+}
+
+function keyReleased(event) {
+  moving = "none";
 }
 
 function moveLeft() {
@@ -112,6 +126,29 @@ function moveLeft() {
 
 function moveRight() {
   setPosition(peter, getPosition(peter).x+speed, getPosition(peter).y);
+}
+
+function detectCollision(a, b) { // a is Peter, b is block
+    var aPos = getPosition(a);
+    var bPos = getPosition(b);
+
+    var x1 = aPos.x;
+    var y1 = aPos.y;
+    var w1 = a.width();
+    var h1 = a.height();
+
+    var x2 = bPos.x;
+    var y2 = bPos.y;
+    var w2 = b.width();
+    var h2 = b.height();
+
+    return (
+      (y1 < y2 + h2) && // y condition
+      (
+        (x1 > x2 && x1 < x2 + w2) || // first x condition
+        (x1 + w1 > x2 && x1 + w1 < x2 + w2) // second x condition
+      )
+    );
 }
 
 // HELPER FUNCTIONS
@@ -128,29 +165,6 @@ function getPosition(jObj) {
   var top = parseFloat(topCSS.substring(0, topCSS.length - 2));
 
   return { x: left, y: top };
-}
-
-// with some inpiration from SO
-function detectCollision(a, b) {
-    var aPos = getPosition(a);
-    var bPos = getPosition(b);
-
-    var aTop = aPos.y;
-    var aLeft = aPos.x;
-    var aWidth = a.width();
-    var aHeight = a.height();
-
-    var bTop = bPos.y;
-    var bLeft = bPos.x;
-    var bWidth = b.width();
-    var bHeight = b.height();
-
-    return !(
-        ((aTop + aHeight) < (bTop)) ||
-        (aTop > (bTop + bHeight)) ||
-        ((aLeft + aWidth) < bLeft) ||
-        (aLeft > (bLeft + bWidth))
-    );
 }
 
 function getRandomInt(min, max) {

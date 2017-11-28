@@ -4,15 +4,11 @@
 }
 
 #peter {
-  position: relative;
-  top:0px;
-  left:0px;
+  position: absolute;
 }
 
 #block {
-  position: relative;
-  top:0px;
-  left:0px;
+  position: absolute;
 }
 
 #info {
