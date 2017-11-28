@@ -62,6 +62,7 @@ function gameLoop() {
       // check collision
       if(detectCollision(peter, block)) {
         score += 1;
+        updateScoreView();
         blockOnScreen = false;
       }
 
@@ -78,7 +79,7 @@ function gameLoop() {
 function endGame() {
   state = "gameOver";
   showInfo()
-  $("#score").html(score);
+  updateScoreView();
   createNewBlock();
 }
 
@@ -86,6 +87,10 @@ function restartGame() {
   hideInfo();
   score = 0;
   state = "playing";
+}
+
+function updateScoreView() {
+  $(".score").html(score);
 }
 
 function showInfo() {

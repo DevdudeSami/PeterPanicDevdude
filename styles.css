@@ -28,3 +28,15 @@ body {
 
   text-align: center;
 }
+
+#scoreIndicator {
+  position: absolute;
+  right: 20px;
+  top: 0px;
+
+  font-family: Helvetica;
+  padding: 10px;
+  border: 1px black solid;
+  background-color: orange;
+  border-radius: 10px;
+}
