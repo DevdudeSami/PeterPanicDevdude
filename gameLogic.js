@@ -1,9 +1,11 @@
 var gameScreen;
 var peter;
 var block;
+var info;
 
 var blockOnScreen = false;
 var state = "playing";  // playing || gameOver
+var score = 0;
 
 const blockNames = ["Algs.png", "AP.png", "DF.png", "IS.png", "PSD.png"];
 const gameWidth = 800;
@@ -17,16 +19,17 @@ function initialiseGame() {
   // variables
   peter = $("#peter");
   gameScreen = $("#game");
-  block = $('<img id="block">');
+  block = $("#block");
+  info = $("#info");
 
   // initialise game screen dimensions
   gameScreen.css({ 'width': gameWidth + 'px', 'height': gameHeight + 'px' });
 
-  // add block to gameScreen
-  gameScreen.append(block);
-
   // set initial position for peter
-  setPosition(peter, 0.5*gameWidth-0.5*peter.width(), gameHeight-peter.height());
+  setPosition(peter, 0.5*(gameWidth-peter.width()), gameHeight-peter.height());
+
+  // set position for info box
+  hideInfo();
 
   // listen to keydown events
   window.addEventListener('keydown', keyPressed);
@@ -47,6 +50,7 @@ function gameLoop() {
 
       // check collision
       if(detectCollision(peter, block)) {
+        score += 1;
         blockOnScreen = false;
       }
 
@@ -57,23 +61,35 @@ function gameLoop() {
     }
   } else {
     // game over
-    window.addEventListener('keydown', keyPressed);
   }
 }
 
 function endGame() {
   state = "gameOver";
+  showInfo()
+  $("#score").html(score);
+  createNewBlock();
 }
 
 function restartGame() {
-  
+  hideInfo();
+  score = 0;
+  state = "playing";
+}
+
+function showInfo() {
+  setPosition(info, 0.5*(gameWidth-info.width()), 0.5*(gameHeight-info.height()));
+}
+
+function hideInfo() {
+  setPosition(info, -1000, -1000);
 }
 
 function createNewBlock() {
   var blockName = blockNames[getRandomInt(0,5)];
 
   block.prop('src', "assets/"+blockName);
-  setPosition(block, getRandomInt(0,gameWidth-block.width()), -block.height());
+  setPosition(block, getRandomInt(0,gameWidth-block.width()), -1.5*block.height());
 
   gameScreen.append("")
 }
@@ -84,6 +100,9 @@ function keyPressed(event) {
   }
   else if(event.key === "ArrowRight") {
     moveRight();
+  }
+  else if(event.keyCode == 13) {
+    if(state == "gameOver") { restartGame(); }
   }
 }
 
@@ -107,9 +126,6 @@ function getPosition(jObj) {
 
   var left = parseFloat(leftCSS.substring(0, leftCSS.length - 2));
   var top = parseFloat(topCSS.substring(0, topCSS.length - 2));
-
-  console.log(left);
-  console.log(top);
 
   return { x: left, y: top };
 }
