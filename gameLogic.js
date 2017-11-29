@@ -8,9 +8,6 @@ var state = "playing";  // playing || gameOver
 var score = 0;
 var moving = "none"; // none || left || right
 
-var petePos = { x: 0, y: 0 };
-var blockPos = { x: 0, y: 0 };
-
 const blockNames = ["Algs.png", "AP.png", "DF.png", "IS.png", "PSD.png"];
 const gameWidth = 800;
 const gameHeight = 600;
@@ -28,8 +25,6 @@ function initialiseGame() {
 
   // initialise game screen dimensions
   gameScreen.css({ 'width': gameWidth + 'px', 'height': gameHeight + 'px' });
-
-  console.log(getPosition(gameScreen));
 
   // set initial position for peter
   setPosition(peter, 0.5*(gameWidth-peter.width()), gameHeight-peter.height());
